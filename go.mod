@@ -1,2 +1,2 @@
-go mod init example.com/simpleapp
-go mod tidy
+
+go 1.24.0
