@@ -1,0 +1,31 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Stop old container
+        run: |
+          docker stop go-app || true
+          docker rm go-app || true
+
+      - name: Build Docker image
+        run: |
+          docker build -t go-app .
+
+      - name: Run new container
+        run: |
+          docker run -d \
+            --name go-app \
+            -p 8080:8080 \
+            --restart unless-stopped \
+            go-app
